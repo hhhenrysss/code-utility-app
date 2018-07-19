@@ -4,14 +4,16 @@
 <head>
     <title>Documentation Displayer</title>
     <meta charset="UTF-8">
-
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <script src="js/main_animation.js" type="text/javascript"></script>
 </head>
 <body>
+<script>window.$ = window.jQuery = require('jquery');</script>
 <h1>A Simple APP</h1>
 
 <!--settings icon-->
-<div class="gear_svg">
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" height="100%"
+<div class="gear_icon">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" height="100%" preserveAspectRatio="xMidYMid meet"
 	 viewBox="0 0 1600 1600" style="enable-background:new 0 0 1600 1600;" xml:space="preserve">
 <style type="text/css">
 	.st0 {
@@ -566,19 +568,61 @@ ACCu117WjXOvAAAAAElFTkSuQmCC" transform="matrix(1.6797 0 0 1.6797 350 370)">
 </div>
 
 <!--selection table-->
-<table class="main_select">
-    <tbody>
-    <tr>
-        <td>Python</td>
-    </tr>
-    <tr>
-        <td>Bash</td>
-    </tr>
-    <tr>
-        <td>Javascript</td>
-    </tr>
-    </tbody>
-</table>
+<ul class="main_select">
+    <li>
+        <h3 class="title">Python</h3>
+        <p class="content">Includes Python3 documentation</p>
+    </li>
+    <li>
+        <h3 class="title">Bash</h3>
+        <p class="content">Includes man page</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+    <li>
+        <h3 class="title">Javascript</h3>
+        <p class="content">Includes Javascript</p>
+    </li>
+</ul>
 
+<script>
+    $(function document_ready() {
+        main_actions.init();
+    })
+</script>
 </body>
 </html>
