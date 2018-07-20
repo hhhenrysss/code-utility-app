@@ -72,8 +72,9 @@ h1 {
 .main_select {
     /*To remove default ul style*/
     list-style: none;
-    padding-left: 3em;
     margin: 0;
+
+    padding: 10em 3em 12em 3em;
 
     text-align: left;
     box-sizing: border-box;
@@ -84,7 +85,8 @@ h1 {
 
 .main_select li {
     margin: 0 auto;
-    padding: 1em;
+    padding: 1.5em;
+    transform: rotateX(30deg);
 }
 
 .main_select .title {
@@ -93,6 +95,7 @@ h1 {
     display: inline-block;
     border-bottom: 0.1em solid #7FB3D5;
     height: 1.5em;
+    font-weight: normal;
 }
 
 .main_select .content {
@@ -103,28 +106,35 @@ h1 {
 
 
 /*active states*/
-.main_select .title:hover {
+
+.main_select li.show {
+    border-bottom-left-radius: 0.5em;
+    border-top-left-radius: 0.5em;
+    box-shadow: 0.1em 0 0.6em #CCD1D1; /*#D8DADA;*/
+    border-right: 0.5em solid #CB4335;
+    max-width: 100%;
+    box-sizing: border-box;
+    transform: rotateX(0);
+    transition: all  0.2s;
+}
+
+.main_select li.show > .title {
     border-bottom: 0.2em solid #CB4335;
     border-bottom-left-radius: 0.1em;
     border-bottom-right-radius: 0.1em;
-    transition: all ease-in 0.1s;
+
+    font-weight: bold;
+    transition: all ease 0.2s;
 }
 
-.main_select .title:hover + .content {
+.main_select li.show + .content {
     display: block;
+    transition: all ease 0.2s;
 }
 
 .main_select li.show > .content {
     display: block;
-}
-
-.main_select li.show {
-    -moz-border-radius-bottomright: 0.5em;
-    box-shadow: 0.1em 0 0.5em #D8DADA;
-    border-right: 0.4em solid #CB4335;
-    max-width: 100%;
-    box-sizing: border-box;
-    transition: all ease-in 0.1s;
+    transition: all ease 0.2s;
 }
 
 
