@@ -3474,7 +3474,7 @@
       priority: ['left', 'right', 'top', 'bottom'],
       /**
        * @prop {number} padding=5
-       * Amount of pixel used to define a minimum distance between the boundaries
+       * Amount of pixel used to define a minimum from_window_to_h1 between the boundaries
        * and the popper this makes sure the popper has always a little padding
        * between the edges of its container
        */

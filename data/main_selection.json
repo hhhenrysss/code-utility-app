@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Documentations",
+    "content": "Documentations of languages, frameworks, .etc",
+    "sub_directories": [
+      {
+        "title": "Python",
+        "title_link": "python3.6.6.html",
+        "content": "Includes Python documentation. Including version 3.6.6"
+      },
+      {
+        "title": "Bash",
+        "content": "Includes man page"
+      },
+      {
+        "title": "Javascript",
+        "content": "Includes Javascript"
+      }
+    ]
+  },
+  {
+    "title": "Code Snippets",
+    "content": "Manages common code snippets that are stored in GitHub"
+  },
+  {
+    "title": "Playgrounds",
+    "content": "Not available 👻"
+  }
+]

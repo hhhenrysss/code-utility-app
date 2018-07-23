@@ -1,30 +1,52 @@
- const main_actions = (function drop_down_menu() {
+let main_actions = (function drop_down_menu() {
+
+    let $ul = $('ul');
+    let $all_li = $('li');
+    let $h1 = $('h1');
 
     let utils = {
         'tag_name': function tag_name($element) {
             return $element.prop('tagName').toLowerCase();
+        },
+        'is_within_range': function is_within_range(range, actual) {
+            return (range[1] > actual[0] && range[1] < actual[1]) || (range[0] > actual[0] && range[0] < actual[1])
         }
     };
 
+    function update_li_position() {
+        let h1_top = $h1.offset().top;
+        let h1_height = $h1.height();
+        let h1_padding_top = ($h1.outerHeight() - h1_height) / 2;
+        let ul_top = $ul.offset().top;
+        let li_padding_top = $all_li.eq(1).css('padding-top').replace('px', '');
+        let padding_top = h1_top + h1_padding_top - li_padding_top * 2 - ul_top;
+        let padding_bottom = h1_top + h1_padding_top - ul_top;
+        $ul.css({
+            'padding-top': padding_top,
+            'padding-bottom': padding_bottom
+        });
+    }
+
+
     function scrolling_effects() {
 
-        let $ul = $('ul');
-        let $all_li = $('li');
         let height = $ul.outerHeight();
-
+        let center = $h1.offset().top + $h1.outerHeight()/2;
 
         $(window).resize(function () {
             height = $ul.outerHeight();
+            center = $h1.offset().top + $h1.outerHeight()/2;
+            update_li_position()
         });
 
         $ul.scroll(function () {
             $all_li.each(function () {
                 let $this = $(this);
-                let top = $this.position().top;
-                let bottom = $this.height();
-                let optimal = height / 1.5;
-
-                if (optimal > top && optimal < top + bottom) {
+                let top = $this.offset().top;
+                console.log(center)
+                let bottom = $this.outerHeight();
+                let optimal_range = [center - 25, center + 25];
+                if (utils.is_within_range(optimal_range, [top, top + bottom])) {
                     if ((!$this.hasClass('show')) && $('.show').length === 0) {
                         $this.addClass('show')
                     }
@@ -34,64 +56,15 @@
                 }
             })
         })
+    }
 
-
-
-
-        // $ul.scroll(function () {
-        //     const curr_scroll = $ul.scrollTop();
-        //     const $curr_show = $('li.show');
-        //     if ($ul.is(':animated')) {
-        //         return
-        //     }
-        //     if (curr_scroll > last_scroll +50) {
-        //         // means scrolling down
-        //         let $next = $curr_show.next('li');
-        //         if ($next.length) {
-        //             $next.addClass('show');
-        //             last_scroll = curr_scroll;
-        //             $ul.animate({scrollTop: $next.position().top}, 650, 'linear');
-        //             $curr_show.removeClass('show');
-        //         }
-        //     }
-        //     else if (curr_scroll +50< last_scroll) {
-        //         // means scrolling up
-        //         let $prev = $curr_show.prev('li');
-        //         if ($prev.length) {
-        //             $prev.addClass('show');
-        //             last_scroll = curr_scroll;
-        //             $ul.animate({scrollTop: $prev.position().top}, 650, 'linear');
-        //             $curr_show.removeClass('show');
-        //         }
-        //     }
-        //     console.log(last_scroll);
-        //     console.log('  '+curr_scroll)
-        // });
-
-        // $('.title, .content, li').on('scroll', function () {
-        //     const $this = $(this);
-        //     if (utils.tag_name($this) !== 'li') {
-        //         let $parent = $this.parent();
-        //         if (!$parent.hasClass('show')) {
-        //             $parent.addClass('show');
-        //         }
-        //         $all_titles.not(this).each(function () {
-        //             $(this).parent().removeClass('show')
-        //         });
-        //     }
-        //     else {
-        //         if (!$this.hasClass('show')){
-        //             $this.addClass('show')
-        //         }
-        //         $all_lis.not(this).each(function () {
-        //             $(this).removeClass('show')
-        //         })
-        //     }
-        // });
+    function load_elements() {
+        let React = require('react');
     }
 
 
     function init() {
+        update_li_position();
         scrolling_effects();
     }
 
@@ -99,3 +72,5 @@
         'init': init
     }
 })();
+
+

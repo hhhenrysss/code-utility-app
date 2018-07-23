@@ -66,6 +66,7 @@ body {
 h1 {
     padding: 4em 0.8em 4em 0.25em;
     border-right: 0.1em solid #7FB3D5;
+    height: auto;
 }
 
 /*Default states*/
@@ -84,9 +85,8 @@ h1 {
 }
 
 .main_select li {
-    margin: 0 auto;
+    margin: 1em auto;
     padding: 1.5em;
-    transform: rotateX(30deg);
 }
 
 .main_select .title {
@@ -103,6 +103,12 @@ h1 {
     display: none;
 }
 
+.main_select a {
+    /*Remove default styles*/
+    color: inherit;
+    text-decoration: inherit;
+}
+
 
 
 /*active states*/
@@ -114,7 +120,6 @@ h1 {
     border-right: 0.5em solid #CB4335;
     max-width: 100%;
     box-sizing: border-box;
-    transform: rotateX(0);
     transition: all  0.2s;
 }
 
