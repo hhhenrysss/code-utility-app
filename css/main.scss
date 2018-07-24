@@ -1,0 +1,160 @@
+/*grid properties*/
+
+body {
+    display: grid;
+    grid-template-columns: 1fr 6fr 8fr 4fr 1fr;
+    grid-template-rows: 1fr 2fr 14fr 3fr;
+    grid-template-areas:
+        "header header header header header"
+        "navigations navigations navigations navigations navigations"
+        "left sidenote main main right"
+        "footer footer footer footer footer"
+    ;
+    grid-gap: 0.25em 0.25em;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.gear_icon {
+    grid-column: 4 / 5;
+    grid-row: 2 / 3;
+    justify-self: right;
+    align-self: stretch;
+}
+
+
+h1 {
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+    justify-self: center;
+    align-self: center;
+}
+
+.main_select {
+    grid-row: 3 / 4;
+    grid-column: 3 / 5;
+    justify-self: stretch;
+    align-self: center;
+}
+
+
+
+/*non grid properties*/
+
+$card_highlight_color: #CB4335;
+$card_shadow_color: #CCD1D1;
+$system_color: #7FB3D5;
+
+html {
+    height: 100%;
+    width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+    body {
+        width: 100%;
+        height: 100%;
+
+
+        .gear_icon {
+            width: 100%;
+            height: 100%;
+
+            svg {
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+
+        h1 {
+            padding: 4em 0.8em 4em 0.25em;
+            border-right: 0.1em solid $system_color;
+            height: auto;
+        }
+    }
+}
+
+
+
+
+/*Default states*/
+.main_select {
+    /*To remove default ul style*/
+    list-style: none;
+    margin: 0;
+
+    padding: 3em;
+
+    text-align: left;
+    box-sizing: border-box;
+
+    max-height: 100%;
+    overflow-y: scroll;
+
+    li {
+        margin: 0 auto;
+        padding: 1.5em;
+
+        .title {
+            margin: 0;
+            padding: 1em 0.25em 0.1em 0.25em;
+            display: inline-block;
+            border-bottom: 0.1em solid $system_color;
+            height: 1.5em;
+            font-weight: normal;
+
+            a {
+                /*Remove default styles*/
+                color: inherit;
+                text-decoration: inherit;
+            }
+
+        }
+
+        .content {
+            //padding: 1em 0;
+            font-size: x-small;
+            color: $card_shadow_color;
+            opacity: 10;
+            padding-left: 0.5em;
+        }
+    }
+}
+
+
+/*active states*/
+
+.main_select {
+    li.show {
+        border-bottom-left-radius: 0.5em;
+        border-top-left-radius: 0.5em;
+        box-shadow: 0.1em 0 0.6em $card_shadow_color;
+        border-right: 0.5em solid $card_highlight_color;
+        max-width: 100%;
+        box-sizing: border-box;
+        transition: all ease 0.2s;
+
+        > .title {
+            padding-bottom: 0.15em;
+            border-bottom: 0.2em solid $card_highlight_color;
+            border-bottom-left-radius: 0.1em;
+            border-bottom-right-radius: 0.1em;
+
+            font-weight: bold;
+            transition: all ease 0.2s;
+        }
+
+        + .content, > .content {
+            color: black;
+            font-size: medium;
+            opacity: 100;
+            padding-top: 0.5em;
+            padding-left: 0;
+            transition: all ease 0.2s;
+        }
+    }
+}
+
+
+
