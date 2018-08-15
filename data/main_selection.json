@@ -2,10 +2,10 @@
   {
     "title": "Documentations",
     "content": "Documentations of languages, frameworks, .etc",
+    "title_link": "#",
     "sub_directories": [
       {
         "title": "Python",
-        "title_link": "python3.6.6.html",
         "content": "Includes Python documentation. Including version 3.6.6"
       },
       {
@@ -20,10 +20,12 @@
   },
   {
     "title": "Code Snippets",
+    "title_link": "#",
     "content": "Manages common code snippets that are stored in GitHub"
   },
   {
     "title": "Playgrounds",
+    "title_link": "#",
     "content": "Not available 👻"
   }
 ]

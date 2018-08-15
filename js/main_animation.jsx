@@ -2,39 +2,9 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const fs = require('fs');
 const d = document;
+const LinkedList = require('./js/data_structures').LinkedList;
+
 const utils = {
-    offset: function offset(elem) {
-        let rect = elem.getBoundingClientRect();
-        return {
-            top: rect.top,
-            left: rect.left,
-            bottom: rect.bottom,
-            right: rect.right
-        }
-    },
-    outerHeight: function outerHeight(elem) {
-        let rect = elem.getBoundingClientRect();
-        return rect.bottom - rect.top;
-    },
-    height: function height(elem) {
-        let style = getComputedStyle(elem);
-        let padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
-        return elem.clientHeight - padding;
-    },
-    css: function css(elem, style) {
-        if (typeof style === typeof '') {
-            let computed_style = getComputedStyle(elem);
-            return computed_style.style;
-        }
-        else {
-            let keys = Object.keys(style);
-            let string = '';
-            for (let i = 0; i < keys.length; i += 1) {
-                string += keys[i] + ': ' + style[keys[i]] + '; ';
-            }
-            elem.setAttribute('style', string.trim());
-        }
-    },
     is_within_range: function is_within_range(range, actual) {
         return (range[1] > actual[0] && range[1] < actual[1]) || (range[0] > actual[0] && range[0] < actual[1])
     },
@@ -51,21 +21,198 @@ const utils = {
         let array = new Uint32Array(number);
         window.crypto.getRandomValues(array);
         return array;
+    },
+    extract_dict_data: function extract_dict_data(dict, key, default_value) {
+        let fallback = default_value === undefined ? 'Example' : default_value;
+        return (dict.hasOwnProperty(key)) ? dict[key] : fallback;
+    },
+    generate_object_depth: function generate_object_depth(obj) {
+        function find_all_dictionaries(dict) {
+            if (utils.is_valid_menu_item(dict)) {
+                let max = -1;
+                for (const key of Object.keys(dict)) {
+                    let curr = dict[key];
+                    let temp = find_all_dictionaries(curr);
+                    max = temp > max ? temp : max;
+                }
+                return max + 1;
+            }
+            else if (Array.isArray(dict)) {
+                let max = -1;
+                for (let i = 0; i < dict.length; i += 1) {
+                    let curr = dict[i];
+                    let temp = find_all_dictionaries(curr);
+                    max = temp > max ? temp : max;
+                }
+                return max;
+            }
+            else {
+                return -1;
+            }
+        }
+
+        return find_all_dictionaries(obj);
+    },
+    generate_data_array: function generate_data_array(data, new_level) {
+
+        let array = [];
+        let level = new_level;
+
+        function find_all_dictionaries(dict, depth) {
+            if (utils.is_valid_menu_item(dict)) {
+                if (depth === level) {
+                    array.push(dict);
+                    return;
+                }
+                for (const key of Object.keys(dict)) {
+                    let curr = dict[key];
+                    find_all_dictionaries(curr, depth + 1);
+                }
+            }
+            else if (Array.isArray(dict)) {
+                for (let i = 0; i < dict.length; i += 1) {
+                    let curr = dict[i];
+                    find_all_dictionaries(curr, depth);
+                }
+            }
+        }
+
+        for (let i = 0; i < data.length; i += 1) {
+            find_all_dictionaries(data[i], 0);
+        }
+        return array;
     }
 };
+
+class t_Icon {
+    constructor(name, method) {
+        this.name = name;
+        this.method = method;
+    }
+
+    generate_icon_dict() {
+        return {name: this.name, method: this.method}
+    }
+
+    generate_icon_element(key) {
+        if (!this.method) {
+            return <a key={key} className='icons'> {this.name} </a>
+        }
+        else {
+            return <a key={key} className='icons' onClick={this.method}> {this.name} </a>
+        }
+    }
+}
+
+class Main extends React.Component {
+    constructor(props) {
+        super(props);
+        this.keys = utils.generate_random_int(1);
+        this.state = (() => {
+            const data = JSON.parse(fs.readFileSync('data/main_selection.json', 'utf8'));
+            let active = Array(data.length).fill(false);
+            let history = new LinkedList(data);
+            let icon_setting = new t_Icon('Setting', null);
+            let icons = [icon_setting];
+            icons.does_icon_exist = function does_icon_exist (name){
+                for (let i = 0; i < this.length; i += 1) {
+                    if (this[i].name === name) {
+                        return i
+                    }
+                }
+                return -1
+            };
+            return {
+                data: data,
+                active: active,
+                history: history,
+                icons: icons
+            }
+        })();
+    }
+    
+    get is_history_end() {
+        return this.state.history.length <= 1
+    }
+
+    update_active_status(i, is_show) {
+        let new_array = this.state.active.slice();
+        new_array[i] = is_show;
+        this.setState({
+            active: new_array
+        })
+    }
+
+
+    update_current_menu(new_menu) {
+        let prev = this.state.history;
+        prev.push(new_menu);
+        this.setState({
+            history: prev
+        })
+    }
+
+    return_previous_menu() {
+        let prev = this.state.history;
+        prev.pop();
+        this.setState({
+            history: prev
+        });
+        this.update_icons()
+    }
+
+    update_icons() {
+        let prev = this.state.icons;
+        if (!this.is_history_end) {
+            let back_btn = new t_Icon('Back', () => {this.return_previous_menu()});
+            prev.unshift(back_btn);
+            this.setState({
+                icons: prev
+            });
+            return
+        }
+        let index = prev.does_icon_exist('Back');
+        if (index !== -1) {
+            prev.splice(index, 1);
+            this.setState({
+                icons: prev
+            })
+        }
+    }
+
+    get_current_menu() {
+        let curr = this.state.history.first;
+        if (Array.isArray(curr)) {
+            return curr
+        }
+        else if (curr.hasOwnProperty('sub_directories')) {
+            return curr.sub_directories
+        }
+    }
+
+    get_current_title() {
+        let title = this.state.history.first.title;
+        return !title ? 'A Simple APP' : title;
+    }
+
+
+    render() {
+        return <MainMenu
+            key={this.keys[0]}
+            active={this.state.active}
+            data={this.get_current_menu()}
+            title={this.get_current_title()}
+            icons={this.state.icons}
+            updateStatus={(i, is_show) => this.update_active_status(i, is_show)}
+            updateMenu={(new_data) => {this.update_current_menu(new_data); this.update_icons()}}
+        />
+    }
+}
+
 
 class MainMenu extends React.Component {
     constructor(props) {
         super(props);
-        this.state = (() => {
-            let data = JSON.parse(fs.readFileSync('data/main_selection.json', 'utf8'));
-            let active = Array(data.length).fill(false);
-            return {
-                level: 0,
-                data: data,
-                active: active
-            }
-        })();
         this.keys = (() => {
             let array = utils.generate_random_int(3);
             return {
@@ -76,57 +223,21 @@ class MainMenu extends React.Component {
         })();
     }
 
-    update_active_status (i, is_show) {
-        let new_array = this.state.active.slice();
-        new_array[i] = is_show;
-        this.setState({
-            active: new_array
-        })
-    }
-
-    generate_data_array() {
-
-        let array = [];
-        let state = this.state;
-
-        function find_all_dicts(dict, depth) {
-            if (utils.is_valid_menu_item(dict)) {
-                if (depth === state.level) {
-                    array.push(dict);
-                    return;
-                }
-                let keys = Object.keys(dict);
-                for (let i = 0; i < keys.length; i += 1) {
-                    let curr = dict[keys[i]];
-                    if (utils.is_valid_menu_item(curr)) {
-                        find_all_dicts(curr, depth+1);
-                    }
-                }
-            }
-        }
-
-        let data = state.data;
-        for (let i = 0; i < data.length; i += 1) {
-            find_all_dicts(data[i], 0);
-        }
-
-        return array;
-    }
-
-
     render() {
         return [
-            <MainMenuIcons key={this.keys.MainMenuIcons}/>,
-            <MainMenuHeader key={this.keys.MainMenuHeader}/>,
+            <MainMenuIcons key={this.keys.MainMenuIcons} icons={this.props.icons}/>,
+            <MainMenuHeader key={this.keys.MainMenuHeader} title={this.props.title}/>,
             <MainMenuList
                 key={this.keys.MainMenuList}
-                data={this.generate_data_array()}
-                active={this.state.active}
-                updateStatus={(i, is_show) => this.update_active_status(i, is_show)}
+                data={this.props.data}
+                active={this.props.active}
+                updateStatus={(i, is_show) => this.props.updateStatus(i, is_show)}
+                updateMenu={(new_data) => {this.props.updateMenu(new_data)}}
             />
         ]
     }
 }
+
 
 class MainMenuList extends React.Component {
 
@@ -149,56 +260,81 @@ class MainMenuList extends React.Component {
                     active={this.props.active[i]}
                     onMouseOver={() => this.props.updateStatus(i, true)}
                     onMouseOut={() => this.props.updateStatus(i, false)}
+                    onClick={(new_data) => this.props.updateMenu(new_data)}
                 />
             );
         }
         return <ul
             className='main_select'>
             {list}
-            </ul>
+        </ul>
     }
 }
 
+
 class MainMenuListItem extends React.Component {
+
+    generate_new_menu(dict) {
+        if (dict.hasOwnProperty('sub_directories')) {
+            this.props.onClick(dict)
+        }
+    }
+
     render() {
         let dict = this.props.dictionary;
-        let title = (dict.hasOwnProperty('title') === -1) ? 'Example' : dict['title'];
-        let content = (dict.hasOwnProperty('content') === -1) ? 'Example' : dict['content'];
-        let title_link = (dict.hasOwnProperty('title_link') === -1) ? '#' : dict['title_link'];
+        let title = utils.extract_dict_data(dict, 'title');
+        let content = utils.extract_dict_data(dict, 'content');
+        let title_link = utils.extract_dict_data(dict, 'title_link', '#');
         let li_status = this.props.active;
 
-
         let a = <a href={title_link}> {title} </a>;
-        let h3 = <h3 className='title'> {a} </h3>;
+        let h3 = <h3
+            className='title'
+            onClick={() => this.generate_new_menu(dict)}> {a} </h3>;
         let p = <p className='content'> {content} </p>;
 
-        let instruction = <p className='content'> Hover to see more </p>;
+        let empty = <p className='content'> </p>;
+        // let instruction = <p className='content'> Hover to see more </p>;
 
         if (li_status) {
             return <li className='show' onMouseOut={() => this.props.onMouseOut()}> {h3} {p} </li>;
         }
         else {
-            return <li onMouseOver={() => this.props.onMouseOver()} > {h3} {instruction} </li>;
+            return <li onMouseOver={() => this.props.onMouseOver()}> {h3} {empty} </li>;
         }
     }
 }
 
+
 class MainMenuHeader extends React.Component {
     render() {
-        return <h1>A Simple APP</h1>
+        return <h1> {this.props.title} </h1>
     }
 }
 
+
 class MainMenuIcons extends React.Component {
+    constructor(props) {
+        super(props);
+        this.keys = utils.generate_random_int(2);
+    }
+
+    generate_icon_array() {
+        let array = [];
+        let icons = this.props.icons;
+        for(let i = 0; i < icons.length; i += 1) {
+            array.push(icons[i].generate_icon_element(this.keys[i]));
+        }
+        return array;
+    }
+
     render() {
-        return <div className='gear_icon'><p><a>Settings</a></p></div>
+        return <div className='gear_icon'> {this.generate_icon_array()} </div>;
     }
 }
 
 
 ReactDOM.render(
-    <MainMenu/>,
-    d.getElementsByTagName('body')[0]
+    <Main/>,
+    d.getElementsByClassName('react_dom')[0]
 );
-
-
