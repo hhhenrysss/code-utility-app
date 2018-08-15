@@ -1,7 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const fs = require('fs');
-const d = document;
 const LinkedList = require('./js/data_structures').LinkedList;
 
 const utils = {
@@ -103,6 +102,7 @@ class t_Icon {
         }
     }
 }
+
 
 class Main extends React.Component {
     constructor(props) {
@@ -279,7 +279,7 @@ class MainMenuListItem extends React.Component {
             this.props.on_click(dict);
         }
         else if (link !== undefined) {
-            window.location.assign(link)
+            window.location.href = link
         }
     }
 
@@ -337,5 +337,5 @@ class MainMenuIcons extends React.Component {
 
 ReactDOM.render(
     <Main/>,
-    d.getElementsByClassName('react_dom')[0]
+    document.getElementsByClassName('react_dom')[0]
 );
