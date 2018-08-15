@@ -6,6 +6,7 @@
     "sub_directories": [
       {
         "title": "Python",
+        "title_link": "../Documentation/Python/template.html",
         "content": "Includes Python documentation. Including version 3.6.6"
       },
       {

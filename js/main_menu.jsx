@@ -96,10 +96,10 @@ class t_Icon {
 
     generate_icon_element(key) {
         if (!this.method) {
-            return <a key={key} className='icons'> {this.name} </a>
+            return <a key={key} href='#' className='icons'> {this.name} </a>
         }
         else {
-            return <a key={key} className='icons' onClick={this.method}> {this.name} </a>
+            return <a key={key} href='#' className='icons' onClick={this.method}> {this.name} </a>
         }
     }
 }
@@ -258,9 +258,9 @@ class MainMenuList extends React.Component {
                     key={this.keys[i]}
                     dictionary={data[i]}
                     active={this.props.active[i]}
-                    onMouseOver={() => this.props.updateStatus(i, true)}
-                    onMouseOut={() => this.props.updateStatus(i, false)}
-                    onClick={(new_data) => this.props.updateMenu(new_data)}
+                    on_mouse_over={() => this.props.updateStatus(i, true)}
+                    on_mouse_out={() => this.props.updateStatus(i, false)}
+                    on_click={(new_data) => this.props.updateMenu(new_data)}
                 />
             );
         }
@@ -274,9 +274,12 @@ class MainMenuList extends React.Component {
 
 class MainMenuListItem extends React.Component {
 
-    generate_new_menu(dict) {
+    redirect(dict, link) {
         if (dict.hasOwnProperty('sub_directories')) {
-            this.props.onClick(dict)
+            this.props.on_click(dict);
+        }
+        else if (link !== undefined) {
+            window.location.assign(link)
         }
     }
 
@@ -287,20 +290,18 @@ class MainMenuListItem extends React.Component {
         let title_link = utils.extract_dict_data(dict, 'title_link', '#');
         let li_status = this.props.active;
 
-        let a = <a href={title_link}> {title} </a>;
-        let h3 = <h3
-            className='title'
-            onClick={() => this.generate_new_menu(dict)}> {a} </h3>;
+        let a = <a href='#' onClick={() => this.redirect(dict, title_link)}> {title} </a>;
+        let h3 = <h3 className='title'> {a} </h3>;
         let p = <p className='content'> {content} </p>;
 
         let empty = <p className='content'> </p>;
         // let instruction = <p className='content'> Hover to see more </p>;
 
         if (li_status) {
-            return <li className='show' onMouseOut={() => this.props.onMouseOut()}> {h3} {p} </li>;
+            return <li className='show' onMouseOut={() => this.props.on_mouse_out()}> {h3} {p} </li>;
         }
         else {
-            return <li onMouseOver={() => this.props.onMouseOver()}> {h3} {empty} </li>;
+            return <li onMouseOver={() => this.props.on_mouse_over()}> {h3} {empty} </li>;
         }
     }
 }
