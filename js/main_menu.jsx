@@ -274,12 +274,18 @@ class MainMenuList extends React.Component {
 
 class MainMenuListItem extends React.Component {
 
-    redirect(dict, link) {
+    redirect(dict, link, title) {
         if (dict.hasOwnProperty('sub_directories')) {
             this.props.on_click(dict);
         }
         else if (link !== undefined) {
-            window.location.href = link
+            // use localStorage to specify which page it redirects to
+            localStorage.setItem('title', title);
+            window.location.href = link;
+            window.onbeforeunload = function delete_storage() {
+                localStorage.removeItem('title');
+                return ''
+            }
         }
     }
 
@@ -290,7 +296,7 @@ class MainMenuListItem extends React.Component {
         let title_link = utils.extract_dict_data(dict, 'title_link', '#');
         let li_status = this.props.active;
 
-        let a = <a href='#' onClick={() => this.redirect(dict, title_link)}> {title} </a>;
+        let a = <a href='#' onClick={() => this.redirect(dict, title_link, title)}> {title} </a>;
         let h3 = <h3 className='title'> {a} </h3>;
         let p = <p className='content'> {content} </p>;
 
