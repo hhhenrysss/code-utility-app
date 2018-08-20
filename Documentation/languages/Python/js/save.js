@@ -10,6 +10,7 @@ const db_dir = path.join(process.cwd(), 'Documentation/languages/Python/db/');
 let db = new SqliteInterface(path.join(db_dir, '3_7_0.db'));
 
 let db_configurations = (function initialize_db() {
+
     const specifications_name = 'specifications';
     const modules_name = 'python3_7_0';
     const specifications_table_configuration = {
@@ -17,15 +18,15 @@ let db_configurations = (function initialize_db() {
         code: 'TEXT',
         description: 'TEXT',
         type: 'VARCHAR',
-        module: 'VARCHAR'
+        module: 'VARCHAR',
+        module_id: 'INTEGER'
     };
     const modules_table_configuration = {
         id: 'INTEGER PRIMARY KEY',
         title: 'VARCHAR',
         description: 'TEXT',
         document: 'TEXT',
-        table_of_contents: 'TEXT',
-        specification_id: 'INTEGER'
+        table_of_contents: 'TEXT'
     };
 
     let db_configurations = {
@@ -34,11 +35,16 @@ let db_configurations = (function initialize_db() {
         specifications_table_configuration: specifications_table_configuration,
         modules_table_configuration: modules_table_configuration
     };
+    db.delete_table(specifications_name);
+    db.delete_table(modules_name);
 
-    db.create_table(specifications_name, specifications_table_configuration);
-    db.create_table(modules_name, modules_table_configuration, [
-        `FOREIGN KEY(specification_id) REFERENCES ${specifications_name}(id)`,
+
+    db.create_table(modules_name, modules_table_configuration);
+    db.create_table(specifications_name, specifications_table_configuration, [
+        `FOREIGN KEY(module_id) REFERENCES ${modules_name}(id)`,
         'ON DELETE CASCADE ON UPDATE NO ACTION'
+    ], [
+        'PRAGMA foreign_keys = ON;'
     ]);
 
     db.configurations = db_configurations;
@@ -119,6 +125,15 @@ class parser extends PythonDocSpecifications{
 
     save() {
         let dl_array = this.dl_name_and_descriptions;
+        db.insert(
+            db_configurations.modules_table_name,
+            {
+                title: this.module_name,
+                description: this.module_h1_description,
+                document: this.document_body,
+                table_of_contents: this.table_of_contents_list
+            }
+        );
         for (let obj of dl_array) {
             db.insert(
                 db_configurations.specifications_table_name,
@@ -126,20 +141,12 @@ class parser extends PythonDocSpecifications{
                     code: obj.code,
                     description: obj.description,
                     type: obj.type,
-                    module: this.module_name
-                }
+                    module: this.module_name,
+                    module_id: `(SELECT id FROM ${db_configurations.modules_table_name} WHERE title=\'${this.module_name}\')`
+                },
+                ['module_id']
             )
         }
-        db.insert(
-            db_configurations.modules_table_name,
-            {
-                title: this.module_name,
-                description: this.module_h1_description,
-                document: this.document_body,
-                table_of_contents: this.table_of_contents_list,
-                specification_id: `(SELECT id FROM ${db_configurations.specifications_table_name} WHERE module='${this.module_name}')`
-            }
-        )
     }
 
     get module_name() {
@@ -200,7 +207,7 @@ class parser extends PythonDocSpecifications{
                         dd.each((i, elem) => {
                             description += $(elem).html()
                         });
-                        return dd == null ? null : dd.trim()
+                        return dd == null ? null : description.trim()
                     }
                     else {
                         return null
@@ -229,7 +236,17 @@ class parser extends PythonDocSpecifications{
     }
 
     get table_of_contents_list() {
-        return this.$('.sphinxsidebarwrapper').children('ul').first().html()
+        // console.log(this.$('.sphinxsidebarwrapper').html())
+        let max_ul_length = 0;
+        let max_ul = null;
+        let $ = this.$;
+        $('.sphinxsidebarwrapper').find('ul').each(function (i, element) {
+            if ($(element).html().length > max_ul_length && $(element).find('a.reference.internal').length > 0) {
+                max_ul = $(element);
+                max_ul_length = $(element).html().length;
+            }
+        });
+        return max_ul == null ? null : max_ul.html()
     }
 
 }
