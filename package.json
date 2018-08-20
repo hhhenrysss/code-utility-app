@@ -13,12 +13,15 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
+    "cheerio": "^1.0.0-rc.2",
     "devtron": "^1.4.0",
     "electron": "^2.0.5",
     "electron-dl": "^1.12.0",
+    "html-minifier": "^3.5.19",
     "jquery": "^3.3.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "sass": "^1.10.0"
+    "sass": "^1.10.0",
+    "sqlite3": "^4.0.2"
   }
 }

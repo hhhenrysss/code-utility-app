@@ -1,5 +1,8 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
+const path = require('path');
+const Redirect = require(path.join(process.cwd(), 'Documentation/js/redirect.js')).Redirect;
+const exec = require(path.join(process.cwd(), 'Documentation/js/exec.js')).Redirect;
 
 class Main extends React.Component {
     render() {
