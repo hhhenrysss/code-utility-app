@@ -4,53 +4,8 @@ const cheerio = require('cheerio');
 const SqliteInterface = require(path.join(process.cwd(), 'Documentation/js/utils/sqlite_interface.js')).SqliteInterface;
 const minifier = require('html-minifier').minify;
 const curr_dir = path.join(process.cwd(), 'Documentation/languages/Python/3.7.0/library');
-
 const db_dir = path.join(process.cwd(), 'Documentation/languages/Python/db/');
-// let db = new sqlite3.Database(path.join(db_dir, '3_7_0.db'));
-let db = new SqliteInterface(path.join(db_dir, '3_7_0.db'));
 
-let db_configurations = (function initialize_db() {
-
-    const specifications_name = 'specifications';
-    const modules_name = 'python3_7_0';
-    const specifications_table_configuration = {
-        id: 'INTEGER PRIMARY KEY',
-        code: 'TEXT',
-        description: 'TEXT',
-        type: 'VARCHAR',
-        module: 'VARCHAR',
-        module_id: 'INTEGER'
-    };
-    const modules_table_configuration = {
-        id: 'INTEGER PRIMARY KEY',
-        title: 'VARCHAR',
-        description: 'TEXT',
-        document: 'TEXT',
-        table_of_contents: 'TEXT'
-    };
-
-    let db_configurations = {
-        specifications_table_name: specifications_name,
-        modules_table_name: modules_name,
-        specifications_table_configuration: specifications_table_configuration,
-        modules_table_configuration: modules_table_configuration
-    };
-    db.delete_table(specifications_name);
-    db.delete_table(modules_name);
-
-
-    db.create_table(modules_name, modules_table_configuration);
-    db.create_table(specifications_name, specifications_table_configuration, [
-        `FOREIGN KEY(module_id) REFERENCES ${modules_name}(id)`,
-        'ON DELETE CASCADE ON UPDATE NO ACTION'
-    ], [
-        'PRAGMA foreign_keys = ON;'
-    ]);
-
-    db.configurations = db_configurations;
-
-    return db_configurations
-})();
 
 class SyntacticLabels {
     constructor(name, description) {
@@ -114,39 +69,111 @@ class PythonDocSpecifications {
     }
 }
 
-class parser extends PythonDocSpecifications{
+class Parser extends PythonDocSpecifications{
 
-    constructor(file_name, data) {
+    constructor(db_path, file_name, data) {
         super();
         this.$ = cheerio.load(data);
         this.name = file_name;
-        this.structure = {}
+        this.structure = {};
+        this.db = new SqliteInterface(db_path);
+
+        (function initialize_db() {
+            let db_configs = Parser.db_configurations;
+            db.delete_table(db_configs.specifications_table_name);
+            db.delete_table(db_configs.modules_table_name);
+
+
+            db.create_table(db_configs.modules_table_name, db_configs.modules_table_configuration);
+            db.create_table(db_configs.specifications_table_name, db_configs.specifications_table_configuration, [
+                `FOREIGN KEY(${db_configs.names.code_module_id}) REFERENCES ${db_configs.modules_table_name}(${db_configs.names.module_id})`,
+                'ON DELETE CASCADE ON UPDATE NO ACTION'
+            ], [
+                'PRAGMA foreign_keys = ON;'
+            ]);
+        })();
     }
 
     save() {
+        let db = this.db;
         let dl_array = this.dl_name_and_descriptions;
+        const configs = Parser.db_configurations;
         db.insert(
-            db_configurations.modules_table_name,
+            Parser.db_configurations.modules_table_name,
             {
-                title: this.module_name,
-                description: this.module_h1_description,
-                document: this.document_body,
-                table_of_contents: this.table_of_contents_list
+                [configs.names.module_title]: this.module_name,
+                [configs.names.module_description]: this.module_h1_description,
+                [configs.names.module_document]: this.document_body,
+                [configs.names.module_table_of_contents]: this.table_of_contents_list
             }
         );
         for (let obj of dl_array) {
             db.insert(
-                db_configurations.specifications_table_name,
+                Parser.db_configurations.specifications_table_name,
                 {
-                    code: obj.code,
-                    description: obj.description,
-                    type: obj.type,
-                    module: this.module_name,
-                    module_id: `(SELECT id FROM ${db_configurations.modules_table_name} WHERE title=\'${this.module_name}\')`
+                    [configs.names.code_code]: obj.code,
+                    [configs.names.code_description]: obj.description,
+                    [configs.names.code_type]: obj.type,
+                    [configs.names.code_module_name]: this.module_name,
+                    [configs.names.code_module_id]: `(SELECT id FROM ${Parser.db_configurations.modules_table_name} WHERE title=\'${this.module_name}\')`
                 },
-                ['module_id']
+                [configs.names.code_module_id]
             )
         }
+    }
+
+    static get db_configurations() {
+        const specifications_name = 'specifications';
+        const modules_name = 'python3_7_0';
+        const code_id = 'id',
+            code_code = 'code',
+            code_description = 'description',
+            code_type = 'type',
+            code_module_name = 'module',
+            code_module_id = 'module_id';
+
+        const specifications_table_configuration = {
+            [code_id]: 'INTEGER PRIMARY KEY',
+            [code_code]: 'TEXT',
+            [code_description]: 'TEXT',
+            [code_type]: 'VARCHAR',
+            [code_module_name]: 'VARCHAR',
+            [code_module_id]: 'INTEGER'
+        };
+
+        const module_id = 'id',
+            module_title = 'title',
+            module_description = 'description',
+            module_document = 'document',
+            module_table_of_contents = 'table_of_contents';
+
+        const modules_table_configuration = {
+            [module_id]: 'INTEGER PRIMARY KEY',
+            [module_title]: 'VARCHAR',
+            [module_description]: 'TEXT',
+            [module_document]: 'TEXT',
+            [module_table_of_contents]: 'TEXT'
+        };
+
+        return {
+            specifications_table_name: specifications_name,
+            modules_table_name: modules_name,
+            specifications_table_configuration: specifications_table_configuration,
+            modules_table_configuration: modules_table_configuration,
+            names: {
+                code_id,
+                code_code,
+                code_description,
+                code_type,
+                code_module_name,
+                code_module_id,
+                module_id,
+                module_title,
+                module_description,
+                module_document,
+                module_table_of_contents
+            }
+        };
     }
 
     get module_name() {
@@ -251,18 +278,24 @@ class parser extends PythonDocSpecifications{
 
 }
 
-fs.readdir(curr_dir, (dir_error, files) => {
-    if (dir_error) throw dir_error;
-    files.forEach((file_name) => {
-        let file_path = path.join(curr_dir, file_name);
-        fs.readFile(file_path, (file_error, data) => {
-            if (file_error) throw file_error;
-            let file_parser = new parser(file_name, minifier(data.toString(), {
-                collapseWhitespace: true,
-                removeEmptyAttributes: true,
-                removeEmptyElements: true
-            }));
-            file_parser.save()
-        })
-    })
-});
+module.exports = {
+    Parser: Parser,
+    PythonDocSpecifications: PythonDocSpecifications,
+    save: function () {
+        fs.readdir(curr_dir, (dir_error, files) => {
+            if (dir_error) throw dir_error;
+            files.forEach((file_name) => {
+                let file_path = path.join(curr_dir, file_name);
+                fs.readFile(file_path, (file_error, data) => {
+                    if (file_error) throw file_error;
+                    let file_parser = new Parser(path.join(db_dir, '3_7_0.db'), file_name, minifier(data.toString(), {
+                        collapseWhitespace: true,
+                        removeEmptyAttributes: true,
+                        removeEmptyElements: true
+                    }));
+                    file_parser.save()
+                })
+            })
+        });
+    }
+};

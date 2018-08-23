@@ -3,7 +3,8 @@ const sqlite3 = require('sqlite3').verbose();
 class SqliteInterface {
     constructor(path, configurations) {
         this.db = new sqlite3.Database(path);
-        this.configurations = configurations == null ? null : configurations
+        this.configurations = configurations == null ? null : configurations;
+        this.db.run('PRAGMA foreign_keys = ON;');
     }
 
     delete_table(table_name) {
@@ -73,6 +74,7 @@ class SqliteInterface {
 
         let actual_values = values.filter(element => special_values.indexOf(element) === -1);
 
+
         this.db.run(`INSERT INTO ${table_name} (${column_string}) VALUES (${value_placeholders});`, actual_values, function (error) {
             if (error) {
                 throw error;
@@ -80,19 +82,40 @@ class SqliteInterface {
         })
     }
 
-    query(select, from, where, order_by) {
-        let sql = this.generate_table_columns(Object.entries({
-            SELECT: select.join(', '),
-            FROM: from,
-            WHERE: where + '= ?',
-            'ORDER BY': order_by
-        }), null, '\n');
-        this.db.each(sql, [where], function (error, row) {
-            if (error) {
-                throw error;
-            }
-            console.log(row.code);
-        })
+    query(select, from, where) {
+
+        // todo: query is too simple and inefficient
+        let rows = [];
+        if (where != null) {
+            let sql = this.generate_table_columns({
+                SELECT: Array.isArray(select) ? select.join(', ') : select,
+                FROM: from,
+                WHERE: where.key + '= ?'
+            }, null, '\n');
+
+            this.db.each(sql + ';', [where.value], (error, row) => {
+                if (error) {
+                    throw error;
+                }
+                rows.push(row);
+            });
+        }
+        else {
+            let sql = this.generate_table_columns({
+                SELECT: Array.isArray(select) ? select.join(', ') : select,
+                FROM: from
+            }, null, '\n');
+
+            this.db.each(sql + ';', undefined, (error, row) => {
+                if (error) {
+                    throw error;
+                }
+                console.log(row[select])
+                rows.push(row[select]);
+            });
+        }
+        console.log(rows)
+        return rows;
     }
 }
 
