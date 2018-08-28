@@ -1,7 +1,8 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const fs = require('fs');
-const LinkedList = require('./js/data_structures').LinkedList;
+const path = require('path');
+const LinkedList = require(path.join(process.cwd(), 'js/data_structures/linked_list.js')).LinkedList;
 
 const utils = {
     is_within_range: function is_within_range(range, actual) {
@@ -278,14 +279,12 @@ class MainMenuListItem extends React.Component {
         if (dict.hasOwnProperty('sub_directories')) {
             this.props.on_click(dict);
         }
-        else if (link !== undefined) {
+        else if (link !== undefined && link !== '#') {
             // use localStorage to specify which page it redirects to
+            let url = link.startsWith('Documentation') ? path.join(process.cwd(), link) : link;
             localStorage.setItem('title', title);
-            window.location.href = link;
-            window.onbeforeunload = function delete_storage() {
-                localStorage.removeItem('title');
-                return ''
-            }
+            window.location.replace(url);
+
         }
     }
 

@@ -6,6 +6,7 @@ const Parser = save.Parser;
 
 
 class Receiver extends PythonDocSpecifications {
+    // all methods return Promises
     constructor(db_path) {
         super();
         this.db = new SqliteInterface(db_path);
@@ -85,5 +86,10 @@ class Receiver extends PythonDocSpecifications {
 }
 
 
-let temp = new Receiver(path.join(process.cwd(), 'Documentation/languages/Python/db/3_7_0.db'));
-console.log(temp.module.get_all_module_names());
+function extract() {
+    return new Receiver(path.join(process.cwd(), 'Documentation/languages/Python/db/3_7_0.db'));
+}
+
+module.exports.extract = extract;
+
+
