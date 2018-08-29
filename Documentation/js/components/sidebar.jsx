@@ -23,6 +23,7 @@ class SideBarItem extends React.Component {
     }
 }
 
+// todo: add key for each child
 module.exports = class SideBar extends React.Component {
 
     render() {

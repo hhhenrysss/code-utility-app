@@ -1,10 +1,17 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const path = require('path');
-const Redirect = require(path.join(process.cwd(), 'Documentation/js/redirect.js')).Redirect;
+const node_path = process.cwd();
+
+const Redirect = require(path.join(node_path, 'Documentation/js/redirect.js')).Redirect;
 const redirect = new Redirect();
-const extract = require(path.join(process.cwd(), `Documentation/languages/${redirect.name}/js/extract.js`)).extract;
+const extract = require(path.join(node_path, `Documentation/languages/${redirect.name}/js/extract.js`)).extract;
 const receiver = extract();
+
+const SideBar = require(path.join(node_path, 'Documentation/js/components/sidebar.js'));
+const Article = require(path.join(node_path, 'Documentation/js/components/main_content.js'));
+const Header = require(path.join(node_path, 'Documentation/js/components/header.js'));
+const Footer = require(path.join(node_path, 'Documentation/js/components/footer.js'));
 
 class Main extends React.Component {
     constructor(props) {
@@ -39,11 +46,6 @@ class Main extends React.Component {
         ]
     }
 }
-
-
-
-
-
 
 
 
