@@ -33,63 +33,18 @@ class Main extends React.Component {
     render() {
         return [
             <SideBar module_list={this.state.all_modules}/>,
-            <Article/>,
-            <Header/>,
+            <Article current_module={this.state.current_module} currrent_state={this.state.current_function}/>,
+            <Header current_module={this.state.current_module}/>,
             <Footer/>
         ]
     }
 }
 
-class SideBarItem extends React.Component {
-    render() {
-        return [
-            <dt> {this.props.dt} </dt>,
-            <dd> {this.props.dd} </dd>
-        ]
-    }
-}
-
-class SideBar extends React.Component {
-
-    render() {
-        let items = [];
-        for (name of this.props.module_list) {
-            items.push(
-                <SideBarItem dd={name} dt={'module'}/>
-            )
-        }
-        return <aside><dl> {items} </dl></aside>
-    }
-}
 
 
 
-class Article extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-    render(){
-        return <article></article>
-    }
-}
 
-class Header extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-    render() {
-        return <header></header>
-    }
-}
 
-class Footer extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-    render() {
-        return <footer></footer>
-    }
-}
 
 
 ReactDOM.render(
