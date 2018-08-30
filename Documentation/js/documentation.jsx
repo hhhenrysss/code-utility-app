@@ -21,7 +21,8 @@ class Main extends React.Component {
                 all_modules: [],
                 current_module_name: 'Test flight',
                 current_content: 'xxx',
-                current_function: ['func']
+                current_active_function: 'undefined',
+                current_displayed_functions: []
             }
         })()
     }
@@ -38,14 +39,20 @@ class Main extends React.Component {
         })
     }
 
-    update_current_function(array_of_functions) {
+    update_current_displayed_functions(array_of_functions) {
         this.setState({
-            current_function: array_of_functions
+            current_displayed_functions: array_of_functions
+        })
+    }
+
+    update_current_active_function(function_string) {
+        this.setState({
+            current_active_function: function_string
         })
     }
 
 
-    componentWillMount() {
+    componentDidMount() {
         receiver.module.get_all_module_names()
             .then((all_module_names) => {
             this.setState({all_modules: all_module_names});
@@ -57,16 +64,26 @@ class Main extends React.Component {
 
     render() {
         return [
-            <SideBar module_list={this.state.all_modules} current_module={this.state.current_module_name} updating_methods={(() => {
+            <SideBar updating_methods={(() => {
                 return {
-                    update_current_module_name: this.update_current_module_name,
-                    update_current_function: this.update_current_function,
-                    update_current_content: this.update_current_content
+                    update_current_module_name: (module_name_string) => this.update_current_module_name(module_name_string),
+                    update_current_displayed_functions: (array_of_functions) => this.update_current_displayed_functions(array_of_functions),
+                    update_current_content: (complete_doc) => this.update_current_content(complete_doc),
+                    update_current_active_function: (function_string) => this.update_current_active_function(function_string)
                 }
-            })()}/>,
-            <Article current_module={this.state.current_module_name} currrent_state={this.state.current_function}/>,
-            <Header current_module={this.state.current_module_name}/>,
-            <Footer/>
+            })()} state_values={(() => {
+                return {
+                    all_modules: this.state.all_modules,
+                    current_module: this.state.current_module_name,
+                    current_displayed_functions: this.state.current_displayed_functions,
+                    current_active_function: this.state.current_active_function
+                }
+            })()}
+            key={'Main_SideBar'}
+            />,
+            <Article key={'Main_Article'} current_module={this.state.current_module_name} currrent_state={this.state.current_function}/>,
+            <Header key={'Main_Header'} current_module={this.state.current_module_name}/>,
+            <Footer key={'Main_Footer'}/>
         ]
     }
 }

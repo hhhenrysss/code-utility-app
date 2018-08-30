@@ -71,6 +71,22 @@ class Receiver extends PythonDocSpecifications {
                     )
                 }
             },
+            get_code_code: function get_code_code(string) {
+              if (!isNaN(string)) {
+                  return db.query(
+                      db_configs.names.code_code,
+                      db_configs.specifications_table_name,
+                      {key: db_configs.names.code_id, value: string}
+                  )
+              }
+              else {
+                  return db.query(
+                      db_configs.names.code_code,
+                      db_configs.specifications_table_name,
+                      {key: db_configs.names.code_module_name, value: string}
+                  )
+              }
+            },
             get_code_description: function get_code_description(code_id) {
                 if (code_id == null) {
                     throw TypeError('code id must be specified')
