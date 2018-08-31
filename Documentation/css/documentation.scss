@@ -1,1 +1,6 @@
 @import "components/sidebar";
+
+html, body, .react_dom{
+  width: 100%;
+  height: 100%;
+}

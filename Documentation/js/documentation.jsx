@@ -37,7 +37,6 @@ class Main extends React.Component {
     update_current_module_state(index, curr_module_name) {
         let new_state = JSON.parse(JSON.stringify(this.state.all_module_states));
         let new_array = JSON.parse(JSON.stringify(this.state.current_displayed_functions));
-        console.log(new_array)
         if (new_state[index] === false) {
             new_state[index] = true;
             this.setState({
@@ -63,8 +62,6 @@ class Main extends React.Component {
                 current_displayed_functions: new_array
             })
         }
-        console.log(new_state[index])
-
     }
 
     update_current_content(complete_doc) {

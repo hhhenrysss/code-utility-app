@@ -38,7 +38,6 @@ class SideBarSubGroup extends React.PureComponent {
 
     render() {
         let array_of_sub_lists = [];
-        console.log(this.props.state_values.current_displayed_functions.hasOwnProperty(this.props.name))
         for (let item of this.props.state_values.current_displayed_functions) {
             if (item.hasOwnProperty(this.props.name)) {
                 for (const func of item[this.props.name]) {
