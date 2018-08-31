@@ -5,6 +5,6 @@ module.exports = class Header extends React.Component {
         super(props)
     }
     render() {
-        return <header> </header>
+        return <header> {this.props.current_module} </header>
     }
 };
