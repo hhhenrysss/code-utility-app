@@ -82,52 +82,40 @@ class SqliteInterface {
         })
     }
 
-    query(select, from, where) {
+    query(select, from, where, order_by) {
 
         // todo: query is too simple and inefficient
         return new Promise((resolve, reject) => {
             let rows = [];
+
+            let config_dict = {};
+            config_dict.SELECT = Array.isArray(select) ? select.join(', ') : select;
+            config_dict.FROM = from;
             if (where != null) {
-                let sql = this.generate_table_columns({
-                    SELECT: Array.isArray(select) ? select.join(', ') : select,
-                    FROM: from,
-                    WHERE: where.key + '= ?'
-                }, null, '\n');
-
-                this.db.each(sql + ';', [where.value], (error, row) => {
-                    if (error) {
-                        reject (error);
-                    }
-                    rows.push(row);
-                }, (error, n) => {
-                    if (error) {
-                        reject (error)
-                    }
-                    else {
-                        resolve(rows)
-                    }
-                });
+                config_dict.WHERE = where.key + '=' + `"${where.value}"`;
             }
-            else {
-                let sql = this.generate_table_columns({
-                    SELECT: Array.isArray(select) ? select.join(', ') : select,
-                    FROM: from
-                }, null, '\n');
-
-                this.db.each(sql + ';', undefined, (error, row) => {
-                    if (error) {
-                        reject (error);
-                    }
-                    rows.push(row[select]);
-                }, (error, n) => {
-                    if (error) {
-                        reject(error)
-                    }
-                    else {
-                        resolve(rows)
-                    }
-                });
+            if (order_by != null) {
+                config_dict['ORDER BY'] = Object.entries(order_by).reduce((acc, item, index) => {
+                    const [key, value] = item;
+                    let string = key + ' ' + value;
+                    return index === 0 ? string : acc+', '+string
+                }, '');
             }
+
+            let sql = this.generate_table_columns(config_dict, null, '\n');
+            this.db.each(sql + ';', undefined, (error, row) => {
+                if (error) {
+                    console.log(error);
+                }
+                rows.push(row);
+            }, (error, n) => {
+                if (error) {
+                    console.log(error);
+                }
+                else {
+                    resolve(rows)
+                }
+            });
         });
     }
 }

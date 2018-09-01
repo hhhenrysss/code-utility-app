@@ -64,6 +64,10 @@ body {
     height: 100vh;
     overflow-y: scroll;
 
+    ul {
+      height: 100%;
+    }
+
     .SideBarItemContents {
       font-family: 'Poppins', sans-serif;
       font-size: 1.1em;

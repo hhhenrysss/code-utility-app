@@ -22,12 +22,25 @@ class Main extends React.Component {
                 all_modules: [],
                 all_module_states: [],
                 current_module_name: 'Test flight',
-                current_content: 'xxx',
-                current_active_function: 'undefined',
+                current_content: {document: 'Test flight'},
+                current_active_function: null,
                 current_displayed_functions: [],
                 is_SideBar_active: true
             }
         })()
+    }
+
+    componentDidMount() {
+        receiver.module.get_all_module_names()
+            .then((all_module_names) => {
+                this.setState({
+                    all_modules: all_module_names.map(item => item[receiver.db_configs.names.module_title]),
+                    all_module_states: Array(all_module_names.length).fill(false)
+                });
+            })
+            .catch((error) => {
+                throw error;
+            })
     }
 
     update_current_module_name(module_name_string) {
@@ -66,9 +79,17 @@ class Main extends React.Component {
         }
     }
 
-    update_current_content(complete_doc) {
+    update_current_content(doc_obj) {
         this.setState({
-            current_content: complete_doc
+            current_content: doc_obj,
+            current_active_function: null
+        });
+    }
+
+    update_current_active_function(func_obj) {
+        this.setState({
+            current_active_function: func_obj,
+            current_content: null
         })
     }
 
@@ -80,57 +101,37 @@ class Main extends React.Component {
         })
     }
 
-    update_current_active_function(function_string) {
-        this.setState({
-            current_active_function: function_string
-        })
-    }
-
     update_SideBar_states() {
         this.setState({
             is_SideBar_active: !this.state.is_SideBar_active
         })
     }
 
-
-    componentDidMount() {
-        receiver.module.get_all_module_names()
-            .then((all_module_names) => {
-            this.setState({
-                all_modules: all_module_names,
-                all_module_states: Array(all_module_names.length).fill(false)
-            });
-        })
-            .catch((error) => {
-            throw error;
-        })
+    generate_state_values() {
+        return this.state
     }
+
+    generate_updating_methods() {
+        return {
+            update_current_module_name: (module_name_string) => this.update_current_module_name(module_name_string),
+            update_current_displayed_functions: (array_of_functions) => this.update_current_displayed_functions(array_of_functions),
+            update_current_content: (complete_doc) => this.update_current_content(complete_doc),
+            update_current_active_function: (function_string) => this.update_current_active_function(function_string),
+            update_current_module_state: (index) => this.update_current_module_state(index)
+        }
+    }
+
+
 
     render() {
         return [
             <Header key={'Main_Header'} current_module={this.state.current_module_name}/>,
-            <SideBar updating_methods={(() => {
-                return {
-                    update_current_module_name: (module_name_string) => this.update_current_module_name(module_name_string),
-                    update_current_displayed_functions: (array_of_functions) => this.update_current_displayed_functions(array_of_functions),
-                    update_current_content: (complete_doc) => this.update_current_content(complete_doc),
-                    update_current_active_function: (function_string) => this.update_current_active_function(function_string),
-                    update_current_module_state: (index) => this.update_current_module_state(index)
-                }
-            })()} state_values={(() => {
-                return {
-                    all_modules: this.state.all_modules,
-                    all_module_states: this.state.all_module_states,
-                    current_module: this.state.current_module_name,
-                    current_displayed_functions: this.state.current_displayed_functions,
-                    current_active_function: this.state.current_active_function,
-                    is_SideBar_active: this.state.is_SideBar_active
-                }
-            })()}
-            key={'Main_SideBar'}
+            <SideBar updating_methods={this.generate_updating_methods()}
+                     state_values={this.generate_state_values()}
+                     key={'Main_SideBar'}
             />,
             <SideBarControlButton key={'Main_SideBarControlButton'} update_SideBar_states={() => this.update_SideBar_states()}/>,
-            <Article key={'Main_Article'} current_module={this.state.current_module_name} currrent_state={this.state.current_function}/>,
+            <Article key={'Main_Article'} state_values={this.generate_state_values()}/>,
             <Footer key={'Main_Footer'}/>
         ]
     }
