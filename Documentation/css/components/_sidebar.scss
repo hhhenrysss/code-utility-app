@@ -1,13 +1,99 @@
 // Inspiration is taken from https://bootstrapious.com/p/bootstrap-sidebar
+// TEMPORARY STYLE
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
-a.simulate_link {
-  cursor: pointer;
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #fafafa;
 }
 
-nav.Sidebar_navigation ul {
-  overflow-y: hidden;
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: -250px;
+  }
+  #sidebar.active {
+    margin-left: 0;
+  }
 }
 
-nav {
-  height: 100%;
+#sidebar {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  min-width: 250px;
+  max-width: 250px;
+  max-height: 100vh;
+  background: #7386D5;
+  color: #fff;
+  transition: all 0.3s;
+
+
+  .active {
+    margin-left: -250px;
+  }
+  .SideBar_navigation_header {
+    padding: 20px;
+    background: #6d7fcc;
+  }
+
+  .dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+  }
+
+  a[data-toggle="collapse"] {
+    position: relative;
+  }
+  a.simulate_link {
+    cursor: pointer;
+  }
+
+  a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  ul {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+    height: 100vh;
+    overflow-y: scroll;
+
+    .SideBarItemContents {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1em;
+      font-weight: 300;
+      line-height: 1.7em;
+      color: #999;
+    }
+
+    p {
+      color: #fff;
+      padding: 10px;
+    }
+    li .SideBarItemContents {
+      padding: 10px;
+      font-size: 1.1em;
+      :hover {
+        color: #7386D5;
+        background: #fff;
+      }
+    }
+    li.active > .SideBarItemContents, .SideBarItemContents[aria-expanded="true"] {
+      color: #fff;
+      background: #6d7fcc;
+    }
+    ul .SideBarItemContents {
+      font-size: 0.9em !important;
+      padding-left: 30px !important;
+      background: #6d7fcc;
+    }
+  }
 }
+
+// two types of class for a: simulate_link and actual_link

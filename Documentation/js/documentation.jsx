@@ -8,7 +8,8 @@ const redirect = new Redirect();
 const extract = require(path.join(node_path, `Documentation/languages/${redirect.name}/js/extract.js`)).extract;
 const receiver = extract();
 
-const SideBar = require(path.join(node_path, 'Documentation/js/components/sidebar.js'));
+const SideBar = require(path.join(node_path, 'Documentation/js/components/sidebar.js')).SideBar;
+const SideBarControlButton = require(path.join(node_path, 'Documentation/js/components/sidebar.js')).SideBarControlButton;
 const Article = require(path.join(node_path, 'Documentation/js/components/main_content.js'));
 const Header = require(path.join(node_path, 'Documentation/js/components/header.js'));
 const Footer = require(path.join(node_path, 'Documentation/js/components/footer.js'));
@@ -23,7 +24,8 @@ class Main extends React.Component {
                 current_module_name: 'Test flight',
                 current_content: 'xxx',
                 current_active_function: 'undefined',
-                current_displayed_functions: []
+                current_displayed_functions: [],
+                is_SideBar_active: true
             }
         })()
     }
@@ -84,6 +86,12 @@ class Main extends React.Component {
         })
     }
 
+    update_SideBar_states() {
+        this.setState({
+            is_SideBar_active: !this.state.is_SideBar_active
+        })
+    }
+
 
     componentDidMount() {
         receiver.module.get_all_module_names()
@@ -115,11 +123,13 @@ class Main extends React.Component {
                     all_module_states: this.state.all_module_states,
                     current_module: this.state.current_module_name,
                     current_displayed_functions: this.state.current_displayed_functions,
-                    current_active_function: this.state.current_active_function
+                    current_active_function: this.state.current_active_function,
+                    is_SideBar_active: this.state.is_SideBar_active
                 }
             })()}
             key={'Main_SideBar'}
             />,
+            <SideBarControlButton key={'Main_SideBarControlButton'} update_SideBar_states={() => this.update_SideBar_states()}/>,
             <Article key={'Main_Article'} current_module={this.state.current_module_name} currrent_state={this.state.current_function}/>,
             <Footer key={'Main_Footer'}/>
         ]
