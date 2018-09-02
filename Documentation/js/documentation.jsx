@@ -130,8 +130,10 @@ class Main extends React.Component {
                      state_values={this.generate_state_values()}
                      key={'Main_SideBar'}
             />,
-            <SideBarControlButton key={'Main_SideBarControlButton'} update_SideBar_states={() => this.update_SideBar_states()}/>,
-            <Article key={'Main_Article'} state_values={this.generate_state_values()}/>,
+            <div id={'content'} key={'div_content'}>
+                <SideBarControlButton key={'Main_SideBarControlButton'} update_SideBar_states={() => this.update_SideBar_states()}/>
+                <Article key={'Main_Article'} state_values={this.generate_state_values()}/>
+            </div>,
             <Footer key={'Main_Footer'}/>
         ]
     }

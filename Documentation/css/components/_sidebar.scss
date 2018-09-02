@@ -1,53 +1,57 @@
 // Inspiration is taken from https://bootstrapious.com/p/bootstrap-sidebar
 // TEMPORARY STYLE
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+@import "../../../css/fonts/sans_serif/sans_serif";
 
+$page_background_color: #ffffff;
+$sidebar_background_color: #D5D5D5;
+$sidebar_title_color: #ffffff;
+$sidebar_item_color: #96858F;
+$sidebar_item_hover_color: #ABB2B9;
+$sidebar_item_active_color: #062F4F;
+$sidebar_item_active_background_color: #9099A2;
+$sidebar_inner_ul_separator_color: #6D7993;
 
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #fafafa;
-}
-
-@media (max-width: 768px) {
-  #sidebar {
-    margin-left: -250px;
-  }
-  #sidebar.active {
-    margin-left: 0;
-  }
-}
+$sidebar_separator_width: 0.05em;
 
 #sidebar {
+  font-family: 'Raleway Light', sans-serif;
   display: flex;
   width: 100%;
   align-items: stretch;
-  min-width: 250px;
-  max-width: 250px;
+  max-width: 17em;
   max-height: 100vh;
-  background: #7386D5;
-  color: #fff;
+  background: $sidebar_background_color;
+  //border-right: #17a2b8 solid 0.6em;
   transition: all 0.3s;
+  padding: 1em 1em;
 
 
-  .active {
-    margin-left: -250px;
-  }
   .SideBar_navigation_header {
-    padding: 20px;
-    background: #6d7fcc;
-  }
-
-  .dropdown-toggle::after {
+    box-sizing: border-box;
+    padding-top: inherit;
+    padding-bottom: inherit;
+    border-bottom: $sidebar_title_color solid $sidebar_separator_width;
     display: block;
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
+
+    font-family: "Raleway Bold", serif;
+    font-weight: bold;
+    text-align: left;
+
+    z-index: 1;
+    top: -0.01em;
+    left: 0;
+    right: 0;
+    position: sticky;
+
+    background-color: $sidebar_background_color;
+    color: $sidebar_title_color;
+
+    h2 {
+      font-size: x-large;
+    }
   }
 
-  a[data-toggle="collapse"] {
-    position: relative;
-  }
+
   a.simulate_link {
     cursor: pointer;
   }
@@ -59,45 +63,50 @@ body {
   }
 
   ul {
-    padding: 20px 0;
-    border-bottom: 1px solid #47748b;
-    height: 100vh;
+    list-style: none;
+    padding: 0.5em;
+    //border-bottom: 1px solid #47748b;
+    border-bottom: $sidebar_title_color solid $sidebar_separator_width;
+    max-height: 100vh;
     overflow-y: scroll;
+    font-size: 0.9em;
 
     ul {
       height: 100%;
+      display: block;
+      padding-left: 1em;
+      border-bottom: $sidebar_inner_ul_separator_color solid $sidebar_separator_width;
+      border-top: $sidebar_inner_ul_separator_color solid $sidebar_separator_width;
     }
+
+    li {
+      padding: 0.5em;
+    }
+
 
     .SideBarItemContents {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.1em;
+      color: $sidebar_item_color;
       font-weight: 300;
-      line-height: 1.7em;
-      color: #999;
+      margin: 0.5em;
     }
 
-    p {
-      color: #fff;
-      padding: 10px;
+    li:hover {
+      background-color: $sidebar_item_hover_color;
     }
-    li .SideBarItemContents {
-      padding: 10px;
-      font-size: 1.1em;
-      :hover {
-        color: #7386D5;
-        background: #fff;
-      }
-    }
+
     li.active > .SideBarItemContents, .SideBarItemContents[aria-expanded="true"] {
-      color: #fff;
-      background: #6d7fcc;
-    }
-    ul .SideBarItemContents {
-      font-size: 0.9em !important;
-      padding-left: 30px !important;
-      background: #6d7fcc;
+      color: $sidebar_item_active_color;
+      text-decoration: underline;
+      font-family: "Raleway Bold", serif;
+      font-weight: bold;
+      transition: all 0.3s;
     }
   }
+}
+
+#sidebar.active {
+  margin-left: -17em;
+  transition: all 0.3s;
 }
 
 // two types of class for a: simulate_link and actual_link

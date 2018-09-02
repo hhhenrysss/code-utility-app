@@ -19,7 +19,7 @@ class SideBarItemContents extends React.Component {
     render() {
         if (this.props.status === 'dropdown_header' && this.props.css_related != null) {
             return <strong
-                className={'SideBarItemContents dropdown-toggle'}
+                className={'SideBarItemContents'}
                 aria-expanded={`${this.props.css_related.aria_expanded}`}
                 data-toggle={"collapse"}
                 onClick={() => {
@@ -169,7 +169,7 @@ module.exports = {
             // todo: finish this drop down list
             let rendered_items = [];
             rendered_items.push(
-                <div key={'SideBar_div'} className={'SideBar_navigation_header'}> Documentation </div>
+                <div key={'SideBar_div'} className={'SideBar_navigation_header'}> <h2>Documentation</h2> </div>
             );
 
 
@@ -202,7 +202,7 @@ module.exports = {
             }
 
             return <nav
-                className={this.props.state_values.is_SideBar_active ? 'SideBar_navigation active' : 'SideBar_navigation'}
+                className={this.props.state_values.is_SideBar_active ? 'SideBar_navigation' : 'SideBar_navigation active'}
                 id={"sidebar"}>
                 <ul> {rendered_items} </ul>
             </nav>

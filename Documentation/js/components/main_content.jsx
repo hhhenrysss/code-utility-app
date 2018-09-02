@@ -11,7 +11,10 @@ module.exports = class Article extends React.Component {
     render(){
         const configs = this.props.state_values;
         if (configs.current_active_function != null) {
-            return <article> </article>
+            console.log(configs.current_active_function)
+            return <article>
+                {configs.current_active_function}
+            </article>
         }
         else if (configs.current_content != null) {
             return <article dangerouslySetInnerHTML={{__html: this.decode_html(configs.current_content.document)}}/>
