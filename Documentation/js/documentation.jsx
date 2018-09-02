@@ -50,6 +50,7 @@ class Main extends React.Component {
     }
 
     update_current_module_state(index, curr_module_name) {
+
         // Original strategy is to allow multiple dropdowns
         // let new_state = JSON.parse(JSON.stringify(this.state.all_module_states));
         // let new_array = JSON.parse(JSON.stringify(this.state.current_displayed_functions));
@@ -160,7 +161,7 @@ class Main extends React.Component {
                      state_values={this.generate_state_values()}
                      key={'Main_SideBar'}
             />,
-            <div id={'content'} key={'div_content'}>
+            <div id={'content'} key={'div_content'} className={'container-fluid'}>
                 <Header key={'Main_Header'} current_module={this.state.current_module_name}/>
                 <SideBarControlButton key={'Main_SideBarControlButton'}
                                       update_SideBar_states={() => this.update_SideBar_states()}/>

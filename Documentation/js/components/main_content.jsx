@@ -7,10 +7,11 @@ module.exports = class Article extends React.Component {
     sanitize_html(string) {
         return sanitizeHtml(string, {
             allowedTags: [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
-                'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
+                'nl', 'dl', 'dd', 'dt', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
                 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre'],
             allowedAttributes: {
-                a: ['name', 'target' ]
+                a: ['name', 'target' ],
+                div: ['class']
             }
         })
     }
@@ -23,12 +24,12 @@ module.exports = class Article extends React.Component {
         const configs = this.props.state_values;
         if (configs.current_active_function != null) {
             console.log(configs.current_active_function)
-            return <article>
+            return <article id={'Article_generated'}>
                 {configs.current_active_function}
             </article>
         }
         else if (configs.current_content != null) {
-            return <article dangerouslySetInnerHTML={{__html: this.sanitize_html(this.decode_html(configs.current_content.document))}}/>
+            return <article id={'Article_extracted'} dangerouslySetInnerHTML={{__html: this.sanitize_html(this.decode_html(configs.current_content.document))}}/>
         }
         else {
             throw "current_content and current_active_function, one of them must be specified"

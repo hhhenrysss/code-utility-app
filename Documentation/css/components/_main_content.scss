@@ -1,8 +1,116 @@
 @import "../../../css/fonts/serif/serif";
+@import "../../../css/fonts/monospace/monospace";
 
-Article {
+$content_code_color: #B82601;
+$content_box_border_color: #96858F;
+$content_box_background_color: #DFDCE3;
+$content_pre_background_color: #F8F9F9;
+
+$content_deprecated_border_color: #B56357;
+
+$content_box_border_width: 0.5em;
+
+@mixin auxiliary_style($color) {
+  border-left: $color solid 0.3em;
+  padding: 0.5em;
+  margin: 1.5em 0;
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+@mixin auxiliary_text() {
+  font-size: small;
+  color: #C5C1C0;
+  font-style: italic;
+}
+
+article {
   flex: 1 1 auto;
   overflow-y: scroll;
   width: 100%;
   font-family: "Roboto Slab Regular", serif;
+}
+
+#Article_extracted {
+  .deprecated .deprecated-removed {
+    margin: 1em 0;
+    font-family: 'Roboto Slab Bold', serif;
+    font-weight: bold;
+    padding: 1em;
+    justify-content: center;
+    border: $content_deprecated_border_color solid 0.1em;
+    border-radius: $content_box_border_width;
+
+    * {
+      vertical-align: middle;
+      margin: 0;
+    }
+  }
+
+  .section {
+    padding: 1em 0;
+    margin: 2em 0;
+
+    h1 {
+      font-size: 3em;
+    }
+  }
+
+  .admonition.seealso {
+    @include auxiliary_style(rgb(179, 208, 218));
+    @include auxiliary_text();
+  }
+
+  .admonition.note {
+    @include auxiliary_style(rgb(120, 150, 166));
+    @include auxiliary_text();
+  }
+
+  .admonition.warning {
+    @include auxiliary_style(rgb(235, 216, 169));
+    font-weight: bold;
+  }
+
+  .versionadded, .versionchanged {
+    @include auxiliary_style(rgb(245, 235, 217));
+    @include auxiliary_text();
+  }
+
+  dl {
+    @include auxiliary_style(rgb(189, 202, 221));
+
+    dt {
+      font-weight: bold;
+    }
+
+    dd {
+      padding-left: 1em;
+    }
+  }
+
+  ul {
+    list-style: circle;
+    padding-left: 1em;
+    li {
+      margin: 1em;
+    }
+  }
+
+
+  code {
+    font-family: 'Roboto Mono Bold', monospace;
+    color: $content_code_color;
+    font-weight: bold;
+  }
+
+  pre {
+    font-family: 'Roboto Mono Regular', monospace;
+    padding: 1em;
+    border-left: $content_box_border_color solid $content_box_border_width;
+    background-color: $content_pre_background_color;
+  }
+
+
 }
