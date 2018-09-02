@@ -50,16 +50,48 @@ class Main extends React.Component {
     }
 
     update_current_module_state(index, curr_module_name) {
-        let new_state = JSON.parse(JSON.stringify(this.state.all_module_states));
+        // Original strategy is to allow multiple dropdowns
+        // let new_state = JSON.parse(JSON.stringify(this.state.all_module_states));
+        // let new_array = JSON.parse(JSON.stringify(this.state.current_displayed_functions));
+        // if (new_state[index] === false) {
+        //     new_state[index] = true;
+        //     this.setState({
+        //         all_module_states: new_state
+        //     })
+        // }
+        // else {
+        //     new_state[index] = false;
+        //     // let new_state = Array(this.state.all_module_states.length).fill(false);
+        //     // delete corresponding functions
+        //     let delete_flag = false;
+        //     let location_index = 0;
+        //     for (let [array_index, obj] of new_array.entries()) {
+        //         if (obj.hasOwnProperty(curr_module_name)) {
+        //             delete_flag = true;
+        //             location_index = array_index;
+        //             break;
+        //         }
+        //     }
+        //     if (delete_flag) {
+        //         new_array = new_array.slice(location_index);
+        //     }
+        //     this.setState({
+        //         all_module_states: new_state,
+        //         current_displayed_functions: new_array
+        //     })
+        // }
+
+        // Changed to allow only one active at a time
+        let new_state = Array(this.state.all_module_states.length).fill(false);
         let new_array = JSON.parse(JSON.stringify(this.state.current_displayed_functions));
-        if (new_state[index] === false) {
+        if (this.state.all_module_states[index] === false) {
             new_state[index] = true;
             this.setState({
                 all_module_states: new_state
             })
         }
         else {
-            new_state[index] = false;
+            // delete corresponding functions
             let delete_flag = false;
             let location_index = 0;
             for (let [array_index, obj] of new_array.entries()) {
@@ -122,23 +154,22 @@ class Main extends React.Component {
     }
 
 
-
     render() {
         return [
-            <Header key={'Main_Header'} current_module={this.state.current_module_name}/>,
             <SideBar updating_methods={this.generate_updating_methods()}
                      state_values={this.generate_state_values()}
                      key={'Main_SideBar'}
             />,
             <div id={'content'} key={'div_content'}>
-                <SideBarControlButton key={'Main_SideBarControlButton'} update_SideBar_states={() => this.update_SideBar_states()}/>
+                <Header key={'Main_Header'} current_module={this.state.current_module_name}/>
+                <SideBarControlButton key={'Main_SideBarControlButton'}
+                                      update_SideBar_states={() => this.update_SideBar_states()}/>
                 <Article key={'Main_Article'} state_values={this.generate_state_values()}/>
-            </div>,
-            <Footer key={'Main_Footer'}/>
+                <Footer key={'Main_Footer'}/>
+            </div>
         ]
     }
 }
-
 
 
 ReactDOM.render(

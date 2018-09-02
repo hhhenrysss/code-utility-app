@@ -1,4 +1,7 @@
 @import "components/sidebar";
+@import "components/main_content";
+@import "components/footer";
+@import "components/header";
 
 html, body, .react_dom{
   width: 100%;
@@ -7,4 +10,18 @@ html, body, .react_dom{
 
 body {
   background: $page_background_color;
+}
+
+.react_dom {
+  max-height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row;
+
+  #content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: column;
+    padding: 1em;
+  }
 }

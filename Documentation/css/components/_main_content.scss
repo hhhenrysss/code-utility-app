@@ -1,7 +1,8 @@
 @import "../../../css/fonts/serif/serif";
 
-#content {
-    font-family: 'Roboto Slab Regular', serif;
-    display: flex;
-    flex: auto;
+Article {
+  flex: 1 1 auto;
+  overflow-y: scroll;
+  width: 100%;
+  font-family: "Roboto Slab Regular", serif;
 }

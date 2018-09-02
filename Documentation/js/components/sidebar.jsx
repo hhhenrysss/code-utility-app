@@ -43,7 +43,11 @@ class SideBarItemContents extends React.Component {
 
 class SideBarItem extends React.Component {
     render() {
-        return <li className={'SideBarItem'}>
+        let li_class = 'SideBarItem';
+        if (this.props.status === 'dropdown_header' && this.props.css_related != null) {
+            li_class += ' active';
+        }
+        return <li className={li_class}>
             <SideBarItemIcons
                 key={'icon_' + this.props.name}
                 name={this.props.name}
@@ -169,7 +173,7 @@ module.exports = {
             // todo: finish this drop down list
             let rendered_items = [];
             rendered_items.push(
-                <div key={'SideBar_div'} className={'SideBar_navigation_header'}> <h2>Documentation</h2> </div>
+                <div key={'SideBar_div'} className={'SideBar_navigation_header'}> <h2>Python Documentation</h2> </div>
             );
 
 
@@ -210,16 +214,14 @@ module.exports = {
     },
     SideBarControlButton: class SideBarControlButton extends React.Component {
         render() {
-            return <div id="content">
-                <nav className={"navbar navbar-expand-lg navbar-light bg-light"}>
-                    <div className={"container-fluid"}>
-                        <button type={"button"} id={"sidebarCollapse"} className={"btn btn-info"}
-                                onClick={this.props.update_SideBar_states}>
-                            <em className={"fas fa-align-left"}> </em>
-                            <span>Toggle Sidebar</span>
-                        </button>
-                    </div>
-                </nav>
+            return <div id="SideBarControlButton">
+                <div className={"container-fluid"}>
+                    <button type={"button"} id={"sidebarCollapse"} className={"btn btn-light btn-sm"}
+                            onClick={this.props.update_SideBar_states}>
+                        <em className={"fas fa-align-left"}> </em>
+                        <span>Toggle Sidebar</span>
+                    </button>
+                </div>
             </div>
         }
     }

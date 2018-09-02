@@ -3,28 +3,32 @@
 @import "../../../css/fonts/sans_serif/sans_serif";
 
 $page_background_color: #ffffff;
-$sidebar_background_color: #D5D5D5;
+$sidebar_background_color: #30415D;
 $sidebar_title_color: #ffffff;
-$sidebar_item_color: #96858F;
+$sidebar_item_color: #C5C1C0;
 $sidebar_item_hover_color: #ABB2B9;
-$sidebar_item_active_color: #062F4F;
+$sidebar_item_hover_contrast_color: #0F1626;
+$sidebar_item_active_color: #D9D9D9;
 $sidebar_item_active_background_color: #9099A2;
 $sidebar_inner_ul_separator_color: #6D7993;
 
 $sidebar_separator_width: 0.05em;
+$sidebar_width: 17em;
+
+$sidebar_control_btn_color: $sidebar_background_color;
 
 #sidebar {
   font-family: 'Raleway Light', sans-serif;
   display: flex;
-  width: 100%;
   align-items: stretch;
-  max-width: 17em;
+  width: $sidebar_width;
   max-height: 100vh;
   background: $sidebar_background_color;
   //border-right: #17a2b8 solid 0.6em;
   transition: all 0.3s;
   padding: 1em 1em;
 
+  flex: 0 0 auto;
 
   .SideBar_navigation_header {
     box-sizing: border-box;
@@ -56,11 +60,6 @@ $sidebar_separator_width: 0.05em;
     cursor: pointer;
   }
 
-  a, a:hover, a:focus {
-    color: inherit;
-    text-decoration: none;
-    transition: all 0.3s;
-  }
 
   ul {
     list-style: none;
@@ -92,9 +91,14 @@ $sidebar_separator_width: 0.05em;
 
     li:hover {
       background-color: $sidebar_item_hover_color;
+
+      .SideBarItemContents {
+        color: $sidebar_item_hover_contrast_color;
+      }
     }
 
-    li.active > .SideBarItemContents, .SideBarItemContents[aria-expanded="true"] {
+
+    .SideBarItemContents[aria-expanded="true"] a {
       color: $sidebar_item_active_color;
       text-decoration: underline;
       font-family: "Raleway Bold", serif;
@@ -105,8 +109,11 @@ $sidebar_separator_width: 0.05em;
 }
 
 #sidebar.active {
-  margin-left: -17em;
-  transition: all 0.3s;
+  margin-left: -$sidebar_width;
+  transition: margin-left 0.3s;
 }
 
+.btn-light {
+  border: $sidebar_control_btn_color solid $sidebar_separator_width;
+}
 // two types of class for a: simulate_link and actual_link
