@@ -16,6 +16,7 @@ function createWindow () {
 
     // Emitted when the window is closed.
     win.on('closed', () => {
+        // localStorage.clear();
         win = null
     })
 }

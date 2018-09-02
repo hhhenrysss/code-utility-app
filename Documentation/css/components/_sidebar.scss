@@ -1,0 +1,119 @@
+// Inspiration is taken from https://bootstrapious.com/p/bootstrap-sidebar
+// TEMPORARY STYLE
+@import "../../../css/fonts/sans_serif/sans_serif";
+
+$page_background_color: #ffffff;
+$sidebar_background_color: #30415D;
+$sidebar_title_color: #ffffff;
+$sidebar_item_color: #C5C1C0;
+$sidebar_item_hover_color: #ABB2B9;
+$sidebar_item_hover_contrast_color: #0F1626;
+$sidebar_item_active_color: #D9D9D9;
+$sidebar_item_active_background_color: #9099A2;
+$sidebar_inner_ul_separator_color: #6D7993;
+
+$sidebar_separator_width: 0.05em;
+$sidebar_width: 17em;
+
+$sidebar_control_btn_color: $sidebar_background_color;
+
+#sidebar {
+  font-family: 'Raleway Light', sans-serif;
+  display: flex;
+  align-items: stretch;
+  width: $sidebar_width;
+  max-height: 100vh;
+  background: $sidebar_background_color;
+  //border-right: #17a2b8 solid 0.6em;
+  transition: all 0.3s;
+  padding: 1em 1em;
+
+  flex: 0 0 auto;
+
+  .SideBar_navigation_header {
+    box-sizing: border-box;
+    padding-top: inherit;
+    padding-bottom: inherit;
+    border-bottom: $sidebar_title_color solid $sidebar_separator_width;
+    display: block;
+
+    font-family: "Raleway Bold", serif;
+    font-weight: bold;
+    text-align: left;
+
+    z-index: 1;
+    top: -0.01em;
+    left: 0;
+    right: 0;
+    position: sticky;
+
+    background-color: $sidebar_background_color;
+    color: $sidebar_title_color;
+
+    h2 {
+      font-size: x-large;
+    }
+  }
+
+
+  a.simulate_link {
+    cursor: pointer;
+  }
+
+
+  ul {
+    list-style: none;
+    padding: 0.5em;
+    //border-bottom: 1px solid #47748b;
+    border-bottom: $sidebar_title_color solid $sidebar_separator_width;
+    max-height: 100vh;
+    overflow-y: scroll;
+    font-size: 0.9em;
+
+    ul {
+      height: 100%;
+      display: block;
+      padding-left: 1em;
+      border-bottom: $sidebar_inner_ul_separator_color solid $sidebar_separator_width;
+      border-top: $sidebar_inner_ul_separator_color solid $sidebar_separator_width;
+    }
+
+    li {
+      padding: 0.5em;
+    }
+
+
+    .SideBarItemContents {
+      color: $sidebar_item_color;
+      font-weight: 300;
+      margin: 0.5em;
+    }
+
+    li:hover {
+      background-color: $sidebar_item_hover_color;
+
+      .SideBarItemContents {
+        color: $sidebar_item_hover_contrast_color;
+      }
+    }
+
+
+    .SideBarItemContents[aria-expanded="true"] a {
+      color: $sidebar_item_active_color;
+      text-decoration: underline;
+      font-family: "Raleway Bold", serif;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+  }
+}
+
+#sidebar.active {
+  margin-left: -$sidebar_width;
+  transition: margin-left 0.3s;
+}
+
+.btn-light {
+  border: $sidebar_control_btn_color solid $sidebar_separator_width;
+}
+// two types of class for a: simulate_link and actual_link
