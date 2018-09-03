@@ -17,6 +17,8 @@ $sidebar_width: 17em;
 
 $sidebar_control_btn_color: $sidebar_background_color;
 
+$sidebar_title_size: 1.8em;
+
 #sidebar {
   font-family: 'Raleway Light', sans-serif;
   display: flex;
@@ -26,8 +28,7 @@ $sidebar_control_btn_color: $sidebar_background_color;
   background: $sidebar_background_color;
   //border-right: #17a2b8 solid 0.6em;
   transition: all 0.3s;
-  padding: 1em 1em;
-
+  padding: 1em;
   flex: 0 0 auto;
 
   .SideBar_navigation_header {
@@ -51,7 +52,7 @@ $sidebar_control_btn_color: $sidebar_background_color;
     color: $sidebar_title_color;
 
     h2 {
-      font-size: x-large;
+      font-size: $sidebar_title_size;
     }
   }
 
@@ -64,6 +65,7 @@ $sidebar_control_btn_color: $sidebar_background_color;
   ul {
     list-style: none;
     padding: 0.5em;
+    margin: 0;
     //border-bottom: 1px solid #47748b;
     border-bottom: $sidebar_title_color solid $sidebar_separator_width;
     max-height: 100vh;

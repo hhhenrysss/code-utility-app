@@ -9,9 +9,9 @@ const extract = require(path.join(node_path, `Documentation/languages/${redirect
 const receiver = extract();
 
 const SideBar = require(path.join(node_path, 'Documentation/js/components/sidebar.js')).SideBar;
-const SideBarControlButton = require(path.join(node_path, 'Documentation/js/components/sidebar.js')).SideBarControlButton;
+const SideBarControlButton = require(path.join(node_path, 'Documentation/js/components/header.js')).SideBarControlButton;
 const Article = require(path.join(node_path, 'Documentation/js/components/main_content.js'));
-const Header = require(path.join(node_path, 'Documentation/js/components/header.js'));
+const Header = require(path.join(node_path, 'Documentation/js/components/header.js')).Header;
 const Footer = require(path.join(node_path, 'Documentation/js/components/footer.js'));
 
 class Main extends React.Component {
@@ -162,9 +162,12 @@ class Main extends React.Component {
                      key={'Main_SideBar'}
             />,
             <div id={'content'} key={'div_content'} className={'container-fluid'}>
-                <Header key={'Main_Header'} current_module={this.state.current_module_name}/>
-                <SideBarControlButton key={'Main_SideBarControlButton'}
-                                      update_SideBar_states={() => this.update_SideBar_states()}/>
+                <div className={'header'} >
+                    <Header key={'Main_Header'} current_module={this.state.current_module_name}/>
+                    <SideBarControlButton key={'Main_SideBarControlButton'}
+                                          is_sidebar_active={this.state.is_SideBar_active}
+                                          update_SideBar_states={() => this.update_SideBar_states()}/>
+                </div>
                 <Article key={'Main_Article'} state_values={this.generate_state_values()}/>
                 <Footer key={'Main_Footer'}/>
             </div>

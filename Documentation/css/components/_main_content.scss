@@ -9,6 +9,7 @@ $content_pre_background_color: #F8F9F9;
 $content_deprecated_border_color: #B56357;
 
 $content_box_border_width: 0.5em;
+$content_auxiliary_text_color: #C5C1C0;
 
 @mixin auxiliary_style($color) {
   border-left: $color solid 0.3em;
@@ -22,7 +23,7 @@ $content_box_border_width: 0.5em;
 
 @mixin auxiliary_text() {
   font-size: small;
-  color: #C5C1C0;
+  color: $content_auxiliary_text_color;
   font-style: italic;
 }
 
@@ -60,11 +61,16 @@ article {
 
   .admonition.seealso {
     @include auxiliary_style(rgb(179, 208, 218));
-    @include auxiliary_text();
+    font-style: italic;
   }
 
   .admonition.note {
     @include auxiliary_style(rgb(120, 150, 166));
+    @include auxiliary_text();
+  }
+
+  .versionadded, .versionchanged {
+    @include auxiliary_style(rgb(245, 235, 217));
     @include auxiliary_text();
   }
 
@@ -73,20 +79,15 @@ article {
     font-weight: bold;
   }
 
-  .versionadded, .versionchanged {
-    @include auxiliary_style(rgb(245, 235, 217));
-    @include auxiliary_text();
-  }
+
 
   dl {
     @include auxiliary_style(rgb(189, 202, 221));
-
     dt {
       font-weight: bold;
     }
-
     dd {
-      padding-left: 1em;
+      padding-left: 1.5em;
     }
   }
 
@@ -95,6 +96,23 @@ article {
     padding-left: 1em;
     li {
       margin: 1em;
+    }
+  }
+
+  table {
+    margin: 1em;
+    max-width: 100%;
+    box-shadow: 0 0 0.8em -0.1em $content_auxiliary_text_color;
+    th {
+      font-family: "Roboto Slab Bold", serif;
+      font-weight: bold;
+      border-bottom: $content_auxiliary_text_color solid 0.05em;
+    }
+    td, th {
+      padding: 0.7em;
+    }
+    tr:not(:last-child) {
+      border-bottom: $content_auxiliary_text_color solid 0.05em;
     }
   }
 

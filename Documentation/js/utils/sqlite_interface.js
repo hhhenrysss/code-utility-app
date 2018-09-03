@@ -1,5 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 
+// todo: use a separate module for this
+
 class SqliteInterface {
     constructor(path, configurations) {
         this.db = new sqlite3.Database(path);

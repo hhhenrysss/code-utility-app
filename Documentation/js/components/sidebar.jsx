@@ -1,5 +1,5 @@
 const React = require('react');
-const extract = require(path.join(node_path, `Documentation/languages/${redirect.name}/js/extract.js`)).extract;
+const extract = require(path.join(process.cwd(), `Documentation/languages/${redirect.name}/js/extract.js`)).extract;
 const receiver = extract();
 const db_configs = receiver.db_configs;
 
@@ -210,19 +210,6 @@ module.exports = {
                 id={"sidebar"}>
                 <ul> {rendered_items} </ul>
             </nav>
-        }
-    },
-    SideBarControlButton: class SideBarControlButton extends React.Component {
-        render() {
-            return <div id="SideBarControlButton">
-                <div className={"container-fluid"}>
-                    <button type={"button"} id={"sidebarCollapse"} className={"btn btn-light btn-sm"}
-                            onClick={this.props.update_SideBar_states}>
-                        <em className={"fas fa-align-left"}> </em>
-                        <span>Toggle Sidebar</span>
-                    </button>
-                </div>
-            </div>
         }
     }
 };

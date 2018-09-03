@@ -1,3 +1,44 @@
-header {
-  flex: 0 1 auto;
+@import "../../../css/fontawesome/scss/fontawesome";
+@import "../../../css/fontawesome/scss/solid";
+
+.header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+
+  color: $sidebar_background_color;
+  padding-bottom: 1em;
+
+  .SideBarControlButton {
+    flex: 0 0 auto;
+    order: 1;
+
+    i {
+      @extend %fa-icon;
+      @extend .fas;
+
+
+      &.fa-angle-right:before {
+        content: fa-content($fa-var-angle-right);
+        transition: all 0.3s;
+      }
+      &.fa-angle-left:before {
+        content: fa-content($fa-var-angle-left);
+        transition: all 0.3s;
+      }
+    }
+  }
+
+  header {
+    flex: 0 1 auto;
+    vertical-align: middle;
+    order: 2;
+
+    color: black;
+    padding-left: 2em;
+    font-family: "Raleway Bold", serif;
+    font-size: $sidebar_title_size;
+
+  }
 }
