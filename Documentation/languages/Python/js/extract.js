@@ -80,6 +80,14 @@ class Receiver extends PythonDocSpecifications {
                       order_by_select == null ? order_by_select : {[order_by_select]: 'ASC'}
                   )
               }
+            },
+            get_code_by_code(code, select, order_by_select) {
+                return db.query(
+                    select,
+                    db_configs.specifications_table_name,
+                    {key: db_configs.names.code_code, value: code},
+                    order_by_select == null ? order_by_select : {[order_by_select]: 'ASC'}
+                )
             }
         }
     }

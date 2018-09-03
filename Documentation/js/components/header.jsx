@@ -7,7 +7,7 @@ module.exports = {
         }
 
         render() {
-            return <header><h3>Current at: {this.props.current_module} </h3></header>
+            return <header><h3>Current at module: {this.props.current_module} </h3></header>
         }
 
     },

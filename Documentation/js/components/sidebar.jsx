@@ -90,11 +90,16 @@ class SideBarSubGroup extends React.PureComponent {
                             status={'dropdown_item'}
                             key={'function_' + obj.code}
                             onClick={() => {
-                                receiver.code.get_code_row(obj.code, [
-                                    db_configs.names.code_description
+                                receiver.code.get_code_by_code(obj.code, [
+                                    db_configs.names.code_description,
+                                    db_configs.names.code_type
                                 ])
-                                    .then((description) => {
-                                        this.props.updating_methods.update_current_active_function(description);
+                                    .then((func_obj) => {
+                                        this.props.updating_methods.update_current_active_function({
+                                            description: func_obj[0].description,
+                                            type: func_obj[0].type,
+                                            func: obj.code
+                                        });
                                     })
                                     .catch((error) => {
                                         throw error;

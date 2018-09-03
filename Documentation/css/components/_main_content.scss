@@ -34,7 +34,7 @@ article {
   font-family: "Roboto Slab Regular", serif;
 }
 
-#Article_extracted {
+#Article_extracted, #Article_generated {
   .deprecated .deprecated-removed {
     margin: 1em 0;
     font-family: 'Roboto Slab Bold', serif;
@@ -94,6 +94,12 @@ article {
   ul {
     list-style: circle;
     padding-left: 1em;
+    ul {
+      list-style: upper-roman;
+      ul {
+        list-style: lower-roman;
+      }
+    }
     li {
       margin: 1em;
     }
